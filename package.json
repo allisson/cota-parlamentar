@@ -12,6 +12,7 @@
     "ejs": "~2.3.3",
     "express": "~4.13.1",
     "morgan": "~1.6.1",
+    "sequelize": "^3.14.1",
     "serve-favicon": "~2.3.0"
   },
   "description": "Aplicação para exibir os dados do CEAP (Cota para o Exercício da Atividade Parlamentar)",
@@ -24,7 +25,8 @@
   },
   "keywords": [
     "parlamentares",
-    "dados-abertos"
+    "dados-abertos",
+    "cota-parlamentar"
   ],
   "author": "Allisson Azevedo",
   "license": "MIT",
