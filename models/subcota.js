@@ -1,17 +1,27 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Subcota = sequelize.define('Subcota', {
-    num_sub_cota: {type: DataTypes.INTEGER, primaryKey: true},
-    txt_descricao: DataTypes.STRING
+  var SubCota = sequelize.define('SubCota', {
+    numSubCota: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
+    txtDescricao: DataTypes.STRING
   }, {
     tableName: 'subcota',
-    underscored: true,
     classMethods: {
       associate: function(models) {
-        Subcota.hasMany(models.EspecificacaoSubcota),
-        Subcota.hasMany(models.Despesa)
+        SubCota.hasMany(models.EspecificacaoSubCota, {
+          foreignKey: {
+            name: 'subCotaId'
+          }
+        }),
+        SubCota.hasMany(models.Despesa, {
+          foreignKey: {
+            name: 'subCotaId'
+          }
+        })
       }
     }
   });
-  return Subcota;
+  return SubCota;
 };

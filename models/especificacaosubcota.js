@@ -1,22 +1,29 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var EspecificacaoSubcota = sequelize.define('EspecificacaoSubcota', {
-    num_especificacao_sub_cota: {type: DataTypes.INTEGER, primaryKey: true},
-    txt_descricao_especificacao: DataTypes.STRING
+  var EspecificacaoSubCota = sequelize.define('EspecificacaoSubCota', {
+    numEspecificacaoSubCota: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
+    txtDescricaoEspecificacao: DataTypes.STRING
   }, {
     tableName: 'especificacaosubcota',
-    underscored: true,
     classMethods: {
       associate: function(models) {
-        EspecificacaoSubcota.belongsTo(models.Subcota, {
+        EspecificacaoSubCota.belongsTo(models.SubCota, {
           onDelete: 'CASCADE',
           foreignKey: {
+            name: 'subCotaId',
             allowNull: false
           }
         }),
-        EspecificacaoSubcota.hasMany(models.Despesa)
+        EspecificacaoSubCota.hasMany(models.Despesa, {
+          foreignKey: {
+            name: 'especificacaoSubCotaId'
+          }
+        })
       }
     }
   });
-  return EspecificacaoSubcota;
+  return EspecificacaoSubCota;
 };

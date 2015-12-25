@@ -1,50 +1,48 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Despesa = sequelize.define('Despesa', {
-    txt_numero: DataTypes.STRING,
-    ind_tipo_documento: DataTypes.INTEGER,
-    dat_emissao: DataTypes.DATE,
-    vlr_documento: DataTypes.DECIMAL,
-    vlr_glosa: DataTypes.DECIMAL,
-    vlr_liquido: DataTypes.DECIMAL,
-    num_mes: DataTypes.INTEGER,
-    num_ano: DataTypes.INTEGER,
-    num_parcela: DataTypes.INTEGER,
-    txt_passageiro: DataTypes.STRING,
-    txt_trecho: DataTypes.STRING,
-    num_lote: DataTypes.INTEGER,
-    num_ressarcimento: DataTypes.INTEGER
+    txtFornecedor: DataTypes.STRING,
+    txtCNPJCPF: DataTypes.STRING,
+    txtNumero: DataTypes.STRING,
+    indTipoDocumento: DataTypes.INTEGER,
+    datEmissao: DataTypes.DATE,
+    vlrDocumento: DataTypes.DECIMAL,
+    vlrGlosa: DataTypes.DECIMAL,
+    vlrLiquido: DataTypes.DECIMAL,
+    numMes: DataTypes.INTEGER,
+    numAno: DataTypes.INTEGER,
+    numParcela: DataTypes.INTEGER,
+    txtPassageiro: DataTypes.STRING,
+    txtTrecho: DataTypes.STRING,
+    numLote: DataTypes.INTEGER,
+    numRessarcimento: DataTypes.INTEGER
   }, {
     tableName: 'despesa',
-    underscored: true,
     classMethods: {
       associate: function(models) {
         Despesa.belongsTo(models.Parlamentar, {
           onDelete: 'CASCADE',
           foreignKey: {
+            name: 'parlamentarId',
             allowNull: false
           }
         }),
-        Despesa.belongsTo(models.Subcota, {
+        Despesa.belongsTo(models.SubCota, {
           onDelete: 'CASCADE',
           foreignKey: {
+            name: 'subCotaId',
             allowNull: false
           }
         }),
-        Despesa.belongsTo(models.EspecificacaoSubcota, {
+        Despesa.belongsTo(models.EspecificacaoSubCota, {
           onDelete: 'CASCADE',
           foreignKey: {
+            name: 'especificacaoSubCotaId',
             allowNull: true
-          }
-        }),
-        Despesa.belongsTo(models.Fornecedor, {
-          onDelete: 'CASCADE',
-          foreignKey: {
-            allowNull: false
           }
         })
       }
     }
   });
-  return Despesa;
+return Despesa;
 };
