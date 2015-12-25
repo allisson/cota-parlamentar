@@ -47,6 +47,7 @@ router.get('/parlamentares', function(req, res, next) {
     .then(function(result) {
       res.json({
         count: result.count,
+        pages: Math.ceil(result.count / limit),
         data: result.rows
       })
     })
@@ -92,6 +93,7 @@ router.get('/subcotas', function(req, res, next) {
     .then(function(result) {
       res.json({
         count: result.count,
+        pages: Math.ceil(result.count / limit),
         data: result.rows
       })
     })
@@ -146,6 +148,7 @@ router.get('/despesas', function(req, res, next) {
     .then(function(result) {
       res.json({
         count: result.count,
+        pages: Math.ceil(result.count / limit),
         data: result.rows
       })
     })
