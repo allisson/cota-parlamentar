@@ -2,16 +2,19 @@ var express = require('express');
 var router = express.Router();
 var models = require('../models');
 
-router.get('/parlamentares', function(req, res, next) {
-
-  // pagination stuff
+router.use(function (req, res, next) {
   var page = 1;
   if (req.query.page) {
     page = req.query.page;
   }
   var limit = 20
   var offset = (page - 1) * limit;
+  req.limit = limit;
+  req.offset = offset;
+  next();
+});
 
+router.get('/parlamentares', function(req, res, next) {
   // filters
   var where = {}
   if (req.query.ideCadastro) {
@@ -34,12 +37,13 @@ router.get('/parlamentares', function(req, res, next) {
   if (req.query.sgPartido) {
     where.sgPartido = req.query.sgPartido
   }
-
+  console.log(req.offset);
+  console.log(req.limit);
   models.Parlamentar
     .findAndCountAll({
       where: where,
-      offset: offset,
-      limit: limit,
+      offset: req.offset,
+      limit: req.limit,
       order: [
         ['txNomeParlamentar', 'ASC'],
       ]
@@ -47,7 +51,7 @@ router.get('/parlamentares', function(req, res, next) {
     .then(function(result) {
       res.json({
         count: result.count,
-        pages: Math.ceil(result.count / limit),
+        pages: Math.ceil(result.count / req.limit),
         data: result.rows
       })
     })
@@ -58,15 +62,6 @@ router.get('/parlamentares', function(req, res, next) {
 });
 
 router.get('/subcotas', function(req, res, next) {
-
-  // pagination stuff
-  var page = 1;
-  if (req.query.page) {
-    page = req.query.page;
-  }
-  var limit = 20
-  var offset = (page - 1) * limit;
-
   // filters
   var where = {}
   if (req.query.numSubCota) {
@@ -84,8 +79,8 @@ router.get('/subcotas', function(req, res, next) {
       include: [
         {model: models.EspecificacaoSubCota}, 
       ],
-      offset: offset,
-      limit: limit,
+      offset: req.offset,
+      limit: req.limit,
       order: [
         ['txtDescricao', 'ASC'],
       ]
@@ -93,7 +88,7 @@ router.get('/subcotas', function(req, res, next) {
     .then(function(result) {
       res.json({
         count: result.count,
-        pages: Math.ceil(result.count / limit),
+        pages: Math.ceil(result.count / req.limit),
         data: result.rows
       })
     })
@@ -104,15 +99,6 @@ router.get('/subcotas', function(req, res, next) {
 });
 
 router.get('/despesas', function(req, res, next) {
-
-  // pagination stuff
-  var page = 1;
-  if (req.query.page) {
-    page = req.query.page;
-  }
-  var limit = 20
-  var offset = (page - 1) * limit;
-
   // filters
   var where = {}
   if (req.query.txtFornecedor) {
@@ -139,8 +125,8 @@ router.get('/despesas', function(req, res, next) {
   models.Despesa
     .findAndCountAll({
       where: where,
-      offset: offset,
-      limit: limit,
+      offset: req.offset,
+      limit: req.limit,
       order: [
         ['datEmissao', 'DESC'],
       ]
@@ -148,7 +134,7 @@ router.get('/despesas', function(req, res, next) {
     .then(function(result) {
       res.json({
         count: result.count,
-        pages: Math.ceil(result.count / limit),
+        pages: Math.ceil(result.count / req.limit),
         data: result.rows
       })
     })
