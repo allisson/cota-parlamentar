@@ -55,7 +55,7 @@ router.get('/parlamentares', function(req, res, next) {
       })
     })
     .catch(function(err) {
-      res.send(err);
+      res.status(500).send(err);
     });
 
 });
@@ -73,7 +73,7 @@ router.get('/parlamentares/:id', function(req, res, next) {
       }
     })
     .catch(function(err) {
-      res.send(err);
+      res.status(500).send(err);
     });
 
 });
@@ -110,7 +110,7 @@ router.get('/subcotas', function(req, res, next) {
       })
     })
     .catch(function(err) {
-      res.send(err);
+      res.status(500).send(err);
     });
 
 });
@@ -136,7 +136,7 @@ router.get('/subcotas/:id', function(req, res, next) {
       }
     })
     .catch(function(err) {
-      res.send(err);
+      res.status(500).send(err);
     });
 
 });
@@ -182,7 +182,7 @@ router.get('/despesas', function(req, res, next) {
       })
     })
     .catch(function(err) {
-      res.send(err);
+      res.status(500).send(err);
     });
 
 });
@@ -200,7 +200,7 @@ router.get('/despesas/:id', function(req, res, next) {
       }
     })
     .catch(function(err) {
-      res.send(err);
+      res.status(500).send(err);
     });
 
 });
