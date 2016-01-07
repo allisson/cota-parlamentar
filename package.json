@@ -13,14 +13,17 @@
     "debug": "~2.2.0",
     "ejs": "~2.3.3",
     "express": "~4.13.1",
+    "faker": "^3.0.1",
     "morgan": "~1.6.1",
+    "pg": "^4.4.3",
     "sequelize": "^3.14.1",
     "serve-favicon": "~2.3.0",
     "xml-stream": "^0.4.5"
   },
   "description": "Aplicação para exibir os dados do CEAP (Cota para o Exercício da Atividade Parlamentar)",
   "devDependencies": {
-    "mocha": "^2.3.4"
+    "mocha": "^2.3.4",
+    "supertest": "^1.1.0"
   },
   "repository": {
     "type": "git",
