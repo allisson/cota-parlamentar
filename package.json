@@ -23,8 +23,8 @@
   },
   "description": "Aplicação para exibir os dados do CEAP (Cota para o Exercício da Atividade Parlamentar)",
   "devDependencies": {
-    "mocha": "^2.3.4",
-    "supertest": "^1.1.0"
+    "mocha": "~2.3.4",
+    "supertest": "~1.1.0"
   },
   "repository": {
     "type": "git",
