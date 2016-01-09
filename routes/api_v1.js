@@ -17,9 +17,6 @@ router.use(function(req, res, next) {
 router.get('/parlamentares', function(req, res, next) {
 
   var where = {}
-  if (req.query.ideCadastro) {
-    where.ideCadastro = req.query.ideCadastro
-  }
   if (req.query.txNomeParlamentar) {
     where.txNomeParlamentar = {
       $iLike: '%' + req.query.txNomeParlamentar + '%'
@@ -36,6 +33,9 @@ router.get('/parlamentares', function(req, res, next) {
   }
   if (req.query.sgPartido) {
     where.sgPartido = req.query.sgPartido
+  }
+  if (req.query.codLegislatura) {
+    where.codLegislatura = req.query.codLegislatura
   }
 
   models.Parlamentar
@@ -81,9 +81,6 @@ router.get('/parlamentares/:id', function(req, res, next) {
 router.get('/subcotas', function(req, res, next) {
 
   var where = {}
-  if (req.query.numSubCota) {
-    where.numSubCota = req.query.numSubCota
-  }
   if (req.query.txtDescricao) {
     where.txtDescricao = {
       $iLike: '%' + req.query.txtDescricao + '%'
@@ -144,23 +141,145 @@ router.get('/subcotas/:id', function(req, res, next) {
 router.get('/despesas', function(req, res, next) {
 
   var where = {}
+
   if (req.query.txtFornecedor) {
     where.txtFornecedor = {
       $iLike: '%' + req.query.txtFornecedor + '%'
     }
   }
+
+  if (req.query.txtCNPJCPF) {
+    where.txtCNPJCPF = {
+      $iLike: '%' + req.query.txtCNPJCPF + '%'
+    }
+  }
+
+  if (req.query.txtNumero) {
+    where.txtNumero = {
+      $iLike: '%' + req.query.txtNumero + '%'
+    }
+  }
+
+  if (req.query.indTipoDocumento) {
+    where.indTipoDocumento = req.query.indTipoDocumento
+  }
+
+  if (req.query.datEmissao) {
+    where.datEmissao = req.query.datEmissao
+  }
+  if (req.query.datEmissao__lt || req.query.datEmissao__lte || req.query.datEmissao__gt || req.query.datEmissao__gte) {
+    where.datEmissao = {};
+  }
+  if (req.query.datEmissao__lt) {
+    where.datEmissao.$lt = req.query.datEmissao__lt
+  }
+  if (req.query.datEmissao__lte) {
+    where.datEmissao.$lte = req.query.datEmissao__lte
+  }
+  if (req.query.datEmissao__gt) {
+    where.datEmissao.$gt = req.query.datEmissao__gt
+  }
+  if (req.query.datEmissao__gte) {
+    where.datEmissao.$gte = req.query.datEmissao__gte
+  }
+
+  if (req.query.vlrDocumento) {
+    where.vlrDocumento = req.query.vlrDocumento
+  }
+  if (req.query.vlrDocumento__lt || req.query.vlrDocumento__lte || req.query.vlrDocumento__gt || req.query.vlrDocumento__gte) {
+    where.vlrDocumento = {};
+  }
+  if (req.query.vlrDocumento__lt) {
+    where.vlrDocumento.$lt = req.query.vlrDocumento__lt
+  }
+  if (req.query.vlrDocumento__lte) {
+    where.vlrDocumento.$lte = req.query.vlrDocumento__lte
+  }
+  if (req.query.vlrDocumento__gt) {
+    where.vlrDocumento.$gt = req.query.vlrDocumento__gt
+  }
+  if (req.query.vlrDocumento__gte) {
+    where.vlrDocumento.$gte = req.query.vlrDocumento__gte
+  }
+
+  if (req.query.vlrGlosa) {
+    where.vlrGlosa = req.query.vlrGlosa
+  }
+  if (req.query.vlrGlosa__lt || req.query.vlrGlosa__lte || req.query.vlrGlosa__gt || req.query.vlrGlosa__gte) {
+    where.vlrGlosa = {};
+  }
+  if (req.query.vlrGlosa__lt) {
+    where.vlrGlosa.$lt = req.query.vlrGlosa__lt
+  }
+  if (req.query.vlrGlosa__lte) {
+    where.vlrGlosa.$lte = req.query.vlrGlosa__lte
+  }
+  if (req.query.vlrGlosa__gt) {
+    where.vlrGlosa.$gt = req.query.vlrGlosa__gt
+  }
+  if (req.query.vlrGlosa__gte) {
+    where.vlrGlosa.$gte = req.query.vlrGlosa__gte
+  }
+
+  if (req.query.vlrLiquido) {
+    where.vlrLiquido = req.query.vlrLiquido
+  }
+  if (req.query.vlrLiquido__lt || req.query.vlrLiquido__lte || req.query.vlrLiquido__gt || req.query.vlrLiquido__gte) {
+    where.vlrLiquido = {};
+  }
+  if (req.query.vlrLiquido__lt) {
+    where.vlrLiquido.$lt = req.query.vlrLiquido__lt
+  }
+  if (req.query.vlrLiquido__lte) {
+    where.vlrLiquido.$lte = req.query.vlrLiquido__lte
+  }
+  if (req.query.vlrLiquido__gt) {
+    where.vlrLiquido.$gt = req.query.vlrLiquido__gt
+  }
+  if (req.query.vlrLiquido__gte) {
+    where.vlrLiquido.$gte = req.query.vlrLiquido__gte
+  }
+
   if (req.query.numAno) {
     where.numAno = req.query.numAno
   }
+
   if (req.query.numMes) {
     where.numMes = req.query.numMes
   }
+
+  if (req.query.numParcela) {
+    where.numParcela = req.query.numParcela
+  }
+
+  if (req.query.txtPassageiro) {
+    where.txtPassageiro = {
+      $iLike: '%' + req.query.txtPassageiro + '%'
+    }
+  }
+
+  if (req.query.txtTrecho) {
+    where.txtTrecho = {
+      $iLike: '%' + req.query.txtTrecho + '%'
+    }
+  }
+
+  if (req.query.numLote) {
+    where.numLote = req.query.numLote
+  }
+
+  if (req.query.numRessarcimento) {
+    where.numRessarcimento = req.query.numRessarcimento
+  }
+
   if (req.query.parlamentarId) {
     where.parlamentarId = req.query.parlamentarId
   }
+
   if (req.query.subCotaId) {
     where.subCotaId = req.query.subCotaId
   }
+
   if (req.query.especificacaoSubCotaId) {
     where.especificacaoSubCotaId = req.query.especificacaoSubCotaId
   }

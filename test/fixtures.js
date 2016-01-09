@@ -40,7 +40,24 @@ module.exports = {
 
     return objects;
   },
-  makeDespesa: function(parlamentarId, subCotaId, quantity) {
+  makeEspecificacaoSubCota: function(subCotaId, quantity) {
+    if (quantity === undefined) {
+      quantity = 1;
+    }
+
+    objects = [];
+
+    for (i = 0; i < quantity; i++) {
+      objects.push({
+        subCotaId: subCotaId,
+        numEspecificacaoSubCota: faker.random.number(),
+        txtDescricaoEspecificacao: faker.commerce.productName(),
+      });
+    }
+
+    return objects;
+  },
+  makeDespesa: function(parlamentarId, subCotaId, especificacaoSubCotaId, quantity) {
     if (quantity === undefined) {
       quantity = 1;
     }
@@ -67,7 +84,8 @@ module.exports = {
         numLote: faker.random.number(),
         numRessarcimento: faker.random.number(),
         parlamentarId: parlamentarId,
-        subCotaId: subCotaId
+        subCotaId: subCotaId,
+        especificacaoSubCotaId: (especificacaoSubCotaId) ? especificacaoSubCotaId : null,
       });
     }
 
