@@ -28,3 +28,4 @@ node_modules
 
 config/config.json
 *.xml
+*.psql

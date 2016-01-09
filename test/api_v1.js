@@ -16,7 +16,7 @@ before(function(done) {
   });
 });
 
-describe('/api/parlamentares endpoint', function() {
+describe('/api/v1/parlamentares endpoint', function() {
 
   var parlamentares = fixtures.makeParlamentar(10);
 
@@ -26,9 +26,9 @@ describe('/api/parlamentares endpoint', function() {
     });
   });
 
-  it('GET /api/parlamentares', function(done) {
+  it('GET /api/v1/parlamentares', function(done) {
     request(app)
-      .get('/api/parlamentares')
+      .get('/api/v1/parlamentares')
       .expect(200)
       .end(function(err, res) {
         if (err) return done(err);
@@ -37,9 +37,9 @@ describe('/api/parlamentares endpoint', function() {
       });
   });
 
-  it('GET /api/parlamentares/:id', function(done) {
+  it('GET /api/v1/parlamentares/:id', function(done) {
     request(app)
-      .get('/api/parlamentares/' + parlamentares[0].ideCadastro)
+      .get('/api/v1/parlamentares/' + parlamentares[0].ideCadastro)
       .expect(200)
       .end(function(err, res) {
         if (err) return done(err);
@@ -50,7 +50,7 @@ describe('/api/parlamentares endpoint', function() {
 
 });
 
-describe('/api/subcota endpoint', function() {
+describe('/api/v1/subcota endpoint', function() {
 
   var subCotas = fixtures.makeSubCota(10);
 
@@ -60,9 +60,9 @@ describe('/api/subcota endpoint', function() {
     });
   });
 
-  it('GET /api/subcotas', function(done) {
+  it('GET /api/v1/subcotas', function(done) {
     request(app)
-      .get('/api/subcotas')
+      .get('/api/v1/subcotas')
       .expect(200)
       .end(function(err, res) {
         if (err) return done(err);
@@ -71,9 +71,9 @@ describe('/api/subcota endpoint', function() {
       });
   });
 
-  it('GET /api/subcotas/:id', function(done) {
+  it('GET /api/v1/subcotas/:id', function(done) {
     request(app)
-      .get('/api/subcotas/' + subCotas[0].numSubCota)
+      .get('/api/v1/subcotas/' + subCotas[0].numSubCota)
       .expect(200)
       .end(function(err, res) {
         if (err) return done(err);
@@ -85,7 +85,7 @@ describe('/api/subcota endpoint', function() {
 });
 
 
-describe('/api/despesas endpoint', function() {
+describe('/api/v1/despesas endpoint', function() {
 
   var parlamentares = fixtures.makeParlamentar(2);
   var subCotas = fixtures.makeSubCota(2);
@@ -120,9 +120,9 @@ describe('/api/despesas endpoint', function() {
       });
   });
 
-  it('GET /api/despesas', function(done) {
+  it('GET /api/v1/despesas', function(done) {
     request(app)
-      .get('/api/despesas')
+      .get('/api/v1/despesas')
       .expect(200)
       .end(function(err, res) {
         if (err) return done(err);
@@ -131,9 +131,9 @@ describe('/api/despesas endpoint', function() {
       });
   });
 
-  it('GET /api/despesas/:id', function(done) {
+  it('GET /api/v1/despesas/:id', function(done) {
     request(app)
-      .get('/api/despesas/' + despesas[0].id)
+      .get('/api/v1/despesas/' + despesas[0].id)
       .expect(200)
       .end(function(err, res) {
         if (err) return done(err);
