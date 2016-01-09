@@ -166,9 +166,21 @@ describe('/api/v1/despesas endpoint', function() {
   var parlamentares = fixtures.makeParlamentar(2);
   var subCotas = fixtures.makeSubCota(2);
   var especificacaoSubCota = fixtures.makeEspecificacaoSubCota(subCotas[0].numSubCota, 1);
-  var despesas = fixtures.makeDespesa(parlamentares[0].ideCadastro, subCotas[0].numSubCota, null, 15);
-  despesas = despesas.concat(fixtures.makeDespesa(parlamentares[1].ideCadastro, subCotas[1].numSubCota, null, 15));
+  var despesas = fixtures.makeDespesa(parlamentares[0].ideCadastro, subCotas[0].numSubCota, null, 5);
+  despesas = despesas.concat(fixtures.makeDespesa(parlamentares[1].ideCadastro, subCotas[1].numSubCota, null, 5));
   despesas[0].especificacaoSubCotaId = especificacaoSubCota[0].numEspecificacaoSubCota;
+  despesas[0].vlrDocumento = 10;
+  despesas[0].vlrGlosa = 10;
+  despesas[0].vlrLiquido = 10;
+  despesas[0].datEmissao = new Date(2015, 01, 01, 0, 0, 0);
+  despesas[1].vlrDocumento = 5;
+  despesas[1].vlrGlosa = 5;
+  despesas[1].vlrLiquido = 5;
+  despesas[1].datEmissao = new Date(2014, 01, 01, 0, 0, 0);
+  despesas[2].vlrDocumento = 15;
+  despesas[2].vlrGlosa = 15;
+  despesas[2].vlrLiquido = 15;
+  despesas[2].datEmissao = new Date(2016, 01, 01, 0, 0, 0);
 
   before(function(done) {
     async.series(
@@ -209,7 +221,7 @@ describe('/api/v1/despesas endpoint', function() {
       .expect(200)
       .end(function(err, res) {
         if (err) return done(err);
-        assert.equal(res.body.data.length, 30);
+        assert.equal(res.body.data.length, 10);
         done();
       });
   });
