@@ -1,0 +1,14 @@
+db:
+  image: postgres
+  environment:
+    POSTGRES_DB: ceap_development
+    POSTGRES_PASSWORD: postgres
+web:
+  build: .
+  command: bash -c "sleep 10 && nodemon --legacy-watch app/bin/www" 
+  volumes:
+    - .:/code/app
+  ports:
+    - "3000:3000"
+  links:
+    - db

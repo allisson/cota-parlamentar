@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "ceap_development",
+    "host": "db",
+    "dialect": "postgres",
+    "logging": false
+  },
+  "test": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "ceap_test",
+    "host": "db",
+    "dialect": "postgres",
+    "logging": false
+  },
+  "production": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "ceap_production",
+    "host": "db",
+    "dialect": "postgres",
+    "logging": false
+  }
+}

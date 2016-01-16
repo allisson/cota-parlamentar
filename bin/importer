@@ -1,10 +1,23 @@
+#!/usr/bin/env node
+
+var program = require('commander');
 var fs = require('fs');
 var async = require('async');
 var XmlStream = require('xml-stream');
 var Set = require('collections/set');
-var models = require('../../models');
+var models = require('../models');
 
-module.exports = function(xmlFilePath) {
+program
+  .version('0.1.0')
+  .usage('arquivo.xml')
+  .arguments('<file>')
+  .action(function(file) {
+    importXmlFile(file);
+  })
+  .parse(process.argv);
+
+
+function importXmlFile(xmlFilePath) {
   models.sequelize.sync().then(function() {
 
     var xmlFile = fs.createReadStream(xmlFilePath);
@@ -12,9 +25,18 @@ module.exports = function(xmlFilePath) {
     var parlamentarSet = new Set({});
     var subCotaSet = new Set({});
     var especificacaoSubCotaSet = new Set({});
+    var processedTotalCount = 0;
+    var processedCount = 0;
+
+    console.log('Importando as despesas do arquivo ' + xmlFilePath);
 
     xml.on('endElement: DESPESA', function(despesa) {
       xml.pause();
+
+      if (processedCount == 10000) {
+        console.log('Até agora foram importadas ' + processedTotalCount + ' despesas');
+        processedCount = 0;
+      }
 
       async.series(
         [
@@ -101,7 +123,7 @@ module.exports = function(xmlFilePath) {
                 txtCNPJCPF: despesa.txtCNPJCPF,
                 txtNumero: despesa.txtNumero,
                 indTipoDocumento: despesa.indTipoDocumento,
-                datEmissao: (despesa.datEmissao) ? despesa.datEmissao : new Date(parseInt(despesa.numAno), parseInt(despesa.numMes -1 ), 1),
+                datEmissao: (despesa.datEmissao) ? despesa.datEmissao : new Date(parseInt(despesa.numAno), parseInt(despesa.numMes - 1), 1),
                 vlrDocumento: despesa.vlrDocumento,
                 vlrGlosa: despesa.vlrGlosa,
                 vlrLiquido: despesa.vlrLiquido,
@@ -130,12 +152,14 @@ module.exports = function(xmlFilePath) {
           parlamentarSet.add(despesa.ideCadastro);
           subCotaSet.add(despesa.numSubCota);
           especificacaoSubCotaSet.add(despesa.numEspecificacaoSubCota);
+          processedTotalCount += 1;
+          processedCount += 1;
           xml.resume();
         });
     });
 
     xml.on('end', function() {
-      console.log('acabou');
+      console.log('Importação concluída: ' + processedTotalCount + ' despesas adicionadas');
     });
 
   });
