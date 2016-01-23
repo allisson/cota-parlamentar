@@ -11,6 +11,7 @@ router.use(function(req, res, next) {
   var offset = (page - 1) * limit;
   req.limit = limit;
   req.offset = offset;
+  res.set('Cache-Control', 'public, max-age=86400');
   next();
 });
 

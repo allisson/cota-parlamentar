@@ -18,7 +18,7 @@
     "faker": "~3.0.1",
     "morgan": "~1.6.1",
     "pg": "~4.4.3",
-    "sequelize": "~3.17.0",
+    "sequelize": "~3.18.0",
     "serve-favicon": "~2.3.0",
     "xml-stream": "~0.4.5"
   },
