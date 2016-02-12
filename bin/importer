@@ -6,6 +6,7 @@ var async = require('async');
 var XmlStream = require('xml-stream');
 var Set = require('collections/set');
 var models = require('../models');
+var repositories = require('../repositories');
 
 program
   .version('0.1.0')
@@ -18,116 +19,138 @@ program
 
 
 function importXmlFile(xmlFilePath) {
-  models.knex.migrate.latest().then(function() {
+  models.knex
+    .migrate
+    .latest()
+    .then(function() {
 
-    var xmlFile = fs.createReadStream(xmlFilePath);
-    var xml = new XmlStream(xmlFile, 'utf16le');
-    var parlamentarSet = new Set({});
-    var subCotaSet = new Set({});
-    var especificacaoSubCotaSet = new Set({});
-    var processedTotalCount = 0;
-    var processedCount = 0;
+      var xmlFile = fs.createReadStream(xmlFilePath);
+      var xml = new XmlStream(xmlFile, 'utf16le');
+      var parlamentarSet = new Set({});
+      var subCotaSet = new Set({});
+      var processedTotalCount = 0;
+      var processedCount = 0;
 
-    console.log('Importando as despesas do arquivo ' + xmlFilePath);
+      console.log('Importando as despesas do arquivo ' + xmlFilePath);
 
-    xml.on('endElement: DESPESA', function(despesa) {
-      xml.pause();
+      xml.on('endElement: DESPESA', function(despesa) {
+        xml.pause();
 
-      if (processedCount == 10000) {
-        console.log('Até agora foram importadas ' + processedTotalCount + ' despesas');
-        processedCount = 0;
-      }
+        if (processedCount == 10000) {
+          console.log('Até agora foram importadas ' + processedTotalCount + ' despesas');
+          processedCount = 0;
+        }
 
-      async.series(
-        [
-          function(callback) {
-            if (parlamentarSet.get(despesa.ideCadastro) === undefined) {
-              models.knex('parlamentares')
-                .insert({
-                  ideCadastro: despesa.ideCadastro,
-                  txNomeParlamentar: despesa.txNomeParlamentar,
-                  nuCarteiraParlamentar: (despesa.nuCarteiraParlamentar) ? despesa.nuCarteiraParlamentar : null,
-                  nuLegislatura: (despesa.nuLegislatura) ? despesa.nuLegislatura : null,
-                  sgUF: (despesa.sgUF) ? despesa.sgUF : null,
-                  sgPartido: (despesa.sgPartido) ? despesa.sgPartido : null,
-                  codLegislatura: (despesa.codLegislatura) ? despesa.codLegislatura : null
-                })
-                .then(function() {
-                  callback(null, null);
-                })
-                .catch(function(err) {
-                  callback(err, null);
-                });
-            } else {
-              callback(null, null);
-            }
-          },
-          function(callback) {
-            if (subCotaSet.get(despesa.numSubCota) === undefined) {
-              models.knex('subcotas')
-                .insert({
-                  numSubCota: despesa.numSubCota,
-                  txtDescricao: despesa.txtDescricao
-                })
-                .then(function() {
-                  callback(null, null);
-                })
-                .catch(function(err) {
-                  callback(err, null);
-                });
-            } else {
-              callback(null, null);
-            }
-          },
-          function(callback) {
-            models.knex('despesas')
-              .insert({
-                parlamentarId: despesa.ideCadastro,
-                subCotaId: despesa.numSubCota,
-                txtFornecedor: despesa.txtFornecedor,
-                txtCNPJCPF: despesa.txtCNPJCPF,
-                txtNumero: despesa.txtNumero,
-                indTipoDocumento: despesa.indTipoDocumento,
-                datEmissao: (despesa.datEmissao) ? despesa.datEmissao : new Date(parseInt(despesa.numAno), parseInt(despesa.numMes - 1), 1),
-                vlrDocumento: despesa.vlrDocumento,
-                vlrGlosa: despesa.vlrGlosa,
-                vlrLiquido: despesa.vlrLiquido,
-                numMes: despesa.numMes,
-                numAno: despesa.numAno,
-                numParcela: despesa.numParcela,
-                txtPassageiro: despesa.txtPassageiro,
-                txtTrecho: despesa.txtTrecho,
-                numLote: despesa.numLote,
-                numRessarcimento: (despesa.numRessarcimento) ? despesa.numRessarcimento : null,
-              })
-              .then(function() {
+        async.series(
+          [
+            function(callback) {
+              despesa.ideCadastro = (despesa.nuDeputadoId) ? despesa.nuDeputadoId : despesa.ideCadastro;
+              if (parlamentarSet.get(despesa.ideCadastro) === undefined) {
+                var parlamentarRepository = new repositories.ParlamentarRepository();
+                parlamentarRepository
+                  .get(despesa.ideCadastro)
+                  .then(function(result) {
+                    if (result === null) {
+                      models.knex('parlamentares')
+                        .insert({
+                          ideCadastro: despesa.ideCadastro,
+                          txNomeParlamentar: despesa.txNomeParlamentar,
+                          nuCarteiraParlamentar: (despesa.nuCarteiraParlamentar) ? despesa.nuCarteiraParlamentar : null,
+                          nuLegislatura: (despesa.nuLegislatura) ? despesa.nuLegislatura : null,
+                          sgUF: (despesa.sgUF) ? despesa.sgUF : null,
+                          sgPartido: (despesa.sgPartido) ? despesa.sgPartido : null,
+                          codLegislatura: (despesa.codLegislatura) ? despesa.codLegislatura : null
+                        })
+                        .then(function() {
+                          callback(null, null);
+                        })
+                        .catch(function(err) {
+                          callback(err, null);
+                        });
+                    } else {
+                      callback(null, null);
+                    }
+                  });
+
+              } else {
                 callback(null, null);
-              })
-              .catch(function(err) {
-                callback(err, null);
-              });
-          }
-        ],
-        // optional callback
-        function(err, results) {
-          if (err) {
-            console.log(err);
-            console.log(despesa);
-          }
-          parlamentarSet.add(despesa.ideCadastro);
-          subCotaSet.add(despesa.numSubCota);
-          especificacaoSubCotaSet.add(despesa.numEspecificacaoSubCota);
-          processedTotalCount += 1;
-          processedCount += 1;
-          xml.resume();
-        });
-    });
+              }
+            },
+            function(callback) {
+              if (subCotaSet.get(despesa.numSubCota) === undefined) {
+                var subCotaRepository = new repositories.SubCotaRepository();
+                subCotaRepository
+                  .get(despesa.numSubCota)
+                  .then(function(result) {
+                    if (result === null) {
+                      models.knex('subcotas')
+                        .insert({
+                          numSubCota: despesa.numSubCota,
+                          txtDescricao: despesa.txtDescricao
+                        })
+                        .then(function() {
+                          callback(null, null);
+                        })
+                        .catch(function(err) {
+                          callback(err, null);
+                        });
+                    } else {
+                      callback(null, null);
+                    }
+                  });
 
-    xml.on('end', function() {
-      console.log('Importação concluída: ' + processedTotalCount + ' despesas adicionadas');
-      process.exit();
-    });
+              } else {
+                callback(null, null);
+              }
+            },
+            function(callback) {
+              models.knex('despesas')
+                .insert({
+                  parlamentarId: despesa.ideCadastro,
+                  subCotaId: despesa.numSubCota,
+                  txtFornecedor: despesa.txtFornecedor,
+                  txtCNPJCPF: despesa.txtCNPJCPF,
+                  txtNumero: despesa.txtNumero,
+                  indTipoDocumento: despesa.indTipoDocumento,
+                  datEmissao: (despesa.datEmissao) ? despesa.datEmissao : new Date(parseInt(despesa.numAno), parseInt(despesa.numMes - 1), 1),
+                  vlrDocumento: despesa.vlrDocumento,
+                  vlrGlosa: despesa.vlrGlosa,
+                  vlrLiquido: despesa.vlrLiquido,
+                  numMes: despesa.numMes,
+                  numAno: despesa.numAno,
+                  numParcela: despesa.numParcela,
+                  txtPassageiro: despesa.txtPassageiro,
+                  txtTrecho: despesa.txtTrecho,
+                  numLote: despesa.numLote,
+                  numRessarcimento: (despesa.numRessarcimento) ? despesa.numRessarcimento : null,
+                })
+                .then(function() {
+                  callback(null, null);
+                })
+                .catch(function(err) {
+                  callback(err, null);
+                });
+            }
+          ],
+          // optional callback
+          function(err, results) {
+            if (err) {
+              console.log(err);
+              console.log(despesa);
+            }
+            parlamentarSet.add(despesa.ideCadastro);
+            subCotaSet.add(despesa.numSubCota);
+            processedTotalCount += 1;
+            processedCount += 1;
+            xml.resume();
+          });
+      });
 
-  });
+      xml.on('end', function() {
+        console.log('Importação concluída: ' + processedTotalCount + ' despesas adicionadas');
+        process.exit();
+      });
+
+    });
 
 };
