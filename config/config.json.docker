@@ -1,18 +1,18 @@
 {
   "development": {
-    "username": "postgres",
+    "user": "postgres",
     "password": "postgres",
     "database": "ceap_development",
     "host": "db"
   },
   "test": {
-    "username": "postgres",
+    "user": "postgres",
     "password": "postgres",
     "database": "ceap_test",
     "host": "db"
   },
   "production": {
-    "username": "postgres",
+    "user": "postgres",
     "password": "postgres",
     "database": "ceap_production",
     "host": "db"

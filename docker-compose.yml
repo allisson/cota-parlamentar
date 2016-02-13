@@ -2,10 +2,12 @@ db:
   image: postgres
   environment:
     POSTGRES_DB: ceap_development
+    POSTGRES_USER: postgres
     POSTGRES_PASSWORD: postgres
 web:
   build: .
-  command: bash -c "sleep 10 && nodemon --legacy-watch app/bin/www" 
+  working_dir: /code/app
+  command: bash -c "sleep 10 && nodemon --legacy-watch bin/www" 
   volumes:
     - .:/code/app
   ports:
