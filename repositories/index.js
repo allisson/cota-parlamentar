@@ -29,7 +29,6 @@ ParlamentarRepository.prototype.list = function(limit, offset, query) {
   var table = this.table;
   var txNomeParlamentar = query.txNomeParlamentar;
   delete query.txNomeParlamentar;
-  delete query.page;
   return new Promise(function(resolve, reject) {
     var knexQuery = models.knex(table)
       .where(query);
@@ -60,7 +59,6 @@ ParlamentarRepository.prototype.list = function(limit, offset, query) {
 
 ParlamentarRepository.prototype.listSummary = function(limit, offset, query) {
   var table = this.table;
-  delete query.page;
   return new Promise(function(resolve, reject) {
     models.knex(table)
       .leftOuterJoin('despesas', 'parlamentares.ideCadastro', 'despesas.parlamentarId')
@@ -120,7 +118,6 @@ SubCotaRepository.prototype.list = function(limit, offset, query) {
   var table = this.table;
   var txtDescricao = query.txtDescricao;
   delete query.txtDescricao;
-  delete query.page;
   return new Promise(function(resolve, reject) {
     var knexQuery = models.knex(table)
       .where(query);
@@ -169,7 +166,6 @@ DespesaRepository.prototype.get = function(id) {
 
 DespesaRepository.prototype.list = function(limit, offset, query) {
   var table = this.table;
-  delete query.page;
   return new Promise(function(resolve, reject) {
     var knexQuery = models.knex(table)
       .where(query);
